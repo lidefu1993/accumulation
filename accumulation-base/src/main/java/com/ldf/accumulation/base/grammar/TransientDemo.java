@@ -1,6 +1,5 @@
 package com.ldf.accumulation.base.grammar;
 
-import org.omg.CORBA.Object;
 
 import java.io.*;
 
@@ -15,8 +14,10 @@ public class TransientDemo {
 
     private static final String PATH = System.getProperty("user.dir") + "\\files\\UserInfo.txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println(PATH);
+        write();
+        read();
     }
 
     private static void write() throws IOException {
@@ -33,9 +34,16 @@ public class TransientDemo {
         }
     }
 
-    private static void read(){
+    private static void read() throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = null;
-
+        try {
+            objectInputStream = new ObjectInputStream(new FileInputStream(PATH));
+            UserInfo userInfo = (UserInfo) objectInputStream.readObject();
+            System.out.println("---------------------read--------------------------");
+            userInfo.print();
+        }finally {
+            if(objectInputStream != null) objectInputStream.close();
+        }
     }
 
     private static UserInfo userInfoBuilder(){
@@ -46,10 +54,10 @@ public class TransientDemo {
         return userInfo;
     }
 
-    static class UserInfo{
+    static class UserInfo implements Serializable{
         private String name;
         private int age;
-        private String password;
+        transient private String password;
 
         public void setName(String name) {
             this.name = name;
