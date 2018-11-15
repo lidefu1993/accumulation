@@ -1,8 +1,6 @@
 package com.ldf.accumulation.leetcode;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 无重复字符的最长子串
@@ -30,7 +28,7 @@ public class LongestSubstring {
 
     public static void main(String[] args) {
         LongestSubstring substring = new LongestSubstring();
-        System.out.println(substring.lengthOfLongestSubstring("dvdf"));
+        System.out.println(substring.lengthOfLongestSubstring2("tmmzuxt"));
     }
 
     /**
@@ -41,24 +39,75 @@ public class LongestSubstring {
      * @param s
      * @return
      */
-    public int lengthOfLongestSubstring(String s) {
-        if(s == null || s.isEmpty()) return 0;
-        int max = 0; //不重复子串的最大长度
-        int preSize = 0;
-        Set<String> set = new HashSet<>(); //储存不重复子串
+    public int lengthOfLongestSubstring1(String s) {
+        if(s == null || s.isEmpty()) {
+            return 0;
+        }
+        //不重复子串的最大长度
+        int max = 0;
+        int preSize;
+        //储存不重复子串
+        Set<String> set = new HashSet<>();
         String[] strings = s.split("");
-        for (int i = 0; i < strings.length; i++){
+        for (String string : strings) {
             preSize = set.size();
-            String current = strings[i];
-            set.add(current);
-            if(preSize == set.size()){
+            set.add(string);
+            if (preSize == set.size()) {
                 max = (max > set.size()) ? max : set.size();
                 set = new HashSet<>();
-                set.add(current);
+                set.add(string);
             }
         }
         max = (max > set.size()) ? max : set.size();
         return max;
     }
+
+    /**
+     * 思路2（失败 -》 超出内存限制）
+     * 基于思路1进行了修改 发现重复后 重新 赋值源字符串（截取与当前字符重复的前一个字符的位置之后的部分）
+     * 然后重新循环
+     * @return
+     */
+    public int lengthOfLongestSubstring2(String s){
+        if(s == null || s.isEmpty()) {
+            return 0;
+        }
+        //不重复子串的最大长度
+        int max = 0;
+        List<String> strings = Arrays.asList(s.split(""));
+        HashSet set = new HashSet();
+        int preSize;
+        int oldSize;
+        while (strings.size() > 0){
+            set = new HashSet();
+            oldSize = strings.size();
+            for (int i = 0; i < strings.size(); i++) {
+                preSize = set.size();
+                String current = strings.get(i);
+                set.add(current);
+                if (preSize == set.size()) {
+                    max = (max > set.size()) ? max : set.size();
+                    strings = sonList(strings, current);
+                    break;
+                }
+                if(i == oldSize-1) {
+                    strings = new ArrayList<>();
+                }
+            }
+        }
+        max = (max > set.size()) ? max : set.size();
+        return max;
+    }
+
+    private List<String> sonList(List<String> oldList, String item){
+        int i = oldList.indexOf(item);
+        String[] oldArray = (String[]) oldList.toArray();
+        int size = oldList.size() - i - 1;
+        String[] newArray = new String[size];
+        System.arraycopy(oldArray, i+1, newArray, 0, size);
+        return Arrays.asList(newArray);
+    }
+
+
 
 }
