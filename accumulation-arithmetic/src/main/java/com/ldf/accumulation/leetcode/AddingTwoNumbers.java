@@ -1,10 +1,8 @@
 package com.ldf.accumulation.leetcode;
 
 import com.ldf.accumulation.domain.ListNode;
-import com.sun.deploy.util.ArrayUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +10,7 @@ import java.util.List;
  * 两数相加
  * Created by ldf on 2018/11/5.
  */
-public class Solution {
+public class AddingTwoNumbers {
 
     /**
      *
@@ -26,7 +24,7 @@ public class Solution {
 
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        AddingTwoNumbers solution = new AddingTwoNumbers();
         ListNode l1 = solution.listNode("342");
         ListNode l2 = solution.listNode("465");
         ListNode listNode = solution.addTwoNumbersOfficial(l1, l2);
